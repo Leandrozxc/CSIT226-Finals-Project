@@ -1,10 +1,10 @@
-# 🎫 University Helpdesk System
+# University Helpdesk System
 
 A web-based helpdesk ticketing system built with **PHP**, **MySQL**, and **XAMPP** for managing university support requests across departments.
 
 ***
 
-## 📋 Features
+## Features
 
 - **Role-based access** — Admin, Staff, Student, Faculty, Employee
 - **Ticket management** — Submit, track, assign, resolve, and close tickets
@@ -18,7 +18,7 @@ A web-based helpdesk ticketing system built with **PHP**, **MySQL**, and **XAMPP
 
 ***
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -30,7 +30,7 @@ A web-based helpdesk ticketing system built with **PHP**, **MySQL**, and **XAMPP
 
 ***
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 csit226finals/
@@ -61,7 +61,7 @@ csit226finals/
 
 ***
 
-## ⚙️ Installation
+## Installation
 
 ### Requirements
 - XAMPP (Apache + MySQL + PHP 8.x)
@@ -92,7 +92,7 @@ http://localhost/csit226finals/
 
 ***
 
-## 👤 Demo Accounts
+## Demo Accounts
 
 | Role | Email | Password |
 |---|---|---|
@@ -104,7 +104,7 @@ http://localhost/csit226finals/
 
 ***
 
-## 🗄️ Database Tables
+## Database Tables
 
 | Table | Description |
 |---|---|
@@ -116,7 +116,7 @@ http://localhost/csit226finals/
 
 ***
 
-## 📌 Business Rules
+## Business Rules
 
 1. Only authenticated users can submit tickets
 2. Admin and Staff can manage and update all tickets
