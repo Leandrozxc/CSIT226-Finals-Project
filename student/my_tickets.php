@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['followup'])) {
         $stmt = $conn->prepare("INSERT INTO followups (TicketID,SenderID,Message) VALUES (?,?,?)");
         $stmt->bind_param('iis', $tid, $uid, $msg);
         $stmt->execute();
+        setFlash('success', 'Message Sent', 'Your follow-up message has been sent.');
     }
     header("Location: my_tickets.php"); exit();
 }
@@ -31,6 +32,7 @@ $tickets = $conn->query("SELECT t.*,d.DeptName,u.FullName as AssigneeName
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/modal.css">
 </head><body>
 <div class="app-layout">
 <?php include '../includes/sidebar_student.php'; ?>
@@ -90,11 +92,16 @@ $tickets = $conn->query("SELECT t.*,d.DeptName,u.FullName as AssigneeName
           <?php endwhile; ?>
         </div>
         <?php if ($t['Status'] !== 'Closed'): ?>
-        <form method="POST" style="margin-top:var(--space-3);display:flex;gap:var(--space-2);">
+        <div style="margin-top:var(--space-3);display:flex;gap:var(--space-2);">
+          <input type="text" class="followup-input" data-tid="<?= $t['TicketID'] ?>" placeholder="Type a follow-up message..."
+            style="flex:1;padding:var(--space-2) var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);">
+          <button type="button" class="btn btn-primary btn-sm send-followup-btn" data-tid="<?= $t['TicketID'] ?>">Send</button>
+        </div>
+        <!-- hidden form for this ticket -->
+        <form id="fupForm_<?= $t['TicketID'] ?>" method="POST" style="display:none;">
           <input type="hidden" name="ticket_id" value="<?= $t['TicketID'] ?>">
           <input type="hidden" name="followup" value="1">
-          <input type="text" name="message" placeholder="Type a follow-up message..." style="flex:1;padding:var(--space-2) var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);" required>
-          <button type="submit" class="btn btn-primary btn-sm">Send</button>
+          <input type="hidden" name="message" class="hidden-msg-<?= $t['TicketID'] ?>">
         </form>
         <?php else: ?>
         <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:var(--space-2);">🔒 This ticket is closed.</p>
@@ -104,4 +111,40 @@ $tickets = $conn->query("SELECT t.*,d.DeptName,u.FullName as AssigneeName
     <?php endwhile; ?>
   </div>
 </div></div>
+
+<script src="../assets/modal.js"></script>
+<script>
+document.querySelectorAll('.send-followup-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const tid = btn.dataset.tid;
+        const input = document.querySelector(`.followup-input[data-tid="${tid}"]`);
+        const msg   = input.value.trim();
+        if (!msg) {
+            await Modal.alert({ type: 'error', title: 'Empty Message', message: 'Please type a message before sending.' });
+            return;
+        }
+        const confirmed = await Modal.confirm({
+            title: 'Send Follow-up',
+            message: `Send this message?<br><br><em style="background:var(--color-bg);padding:8px;border-radius:6px;display:block;">"${msg}"</em>`,
+            confirmText: 'Send'
+        });
+        if (confirmed) {
+            document.querySelector(`.hidden-msg-${tid}`).value = msg;
+            Modal.loading(btn, 'Sending...');
+            document.getElementById(`fupForm_${tid}`).submit();
+        }
+    });
+});
+</script>
+<?php if (isset($_SESSION['flash'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    Modal.alert({
+        type: '<?= htmlspecialchars($_SESSION['flash']['type']) ?>',
+        title: '<?= htmlspecialchars($_SESSION['flash']['title']) ?>',
+        message: '<?= htmlspecialchars($_SESSION['flash']['message']) ?>'
+    });
+});
+</script>
+<?php unset($_SESSION['flash']); endif; ?>
 </body></html>

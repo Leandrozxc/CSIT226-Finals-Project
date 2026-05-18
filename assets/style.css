@@ -1,6 +1,7 @@
 /* =============================================
    University Helpdesk - csit226finals
    ============================================= */
+   
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --font-body: 'Inter', system-ui, sans-serif;

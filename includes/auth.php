@@ -34,3 +34,6 @@ function priorityBadge($p) {
     $map = ['Low'=>'badge-low','Normal'=>'badge-normal','High'=>'badge-high','Urgent'=>'badge-urgent'];
     return $map[$p] ?? 'badge-normal';
 }
+function setFlash(string $type, string $title, string $message): void {
+    $_SESSION['flash'] = compact('type', 'title', 'message');
+}

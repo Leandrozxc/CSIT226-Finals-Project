@@ -5,13 +5,13 @@ requireLogin();
 $uid = $_SESSION['user_id'];
 $id  = intval($_GET['id'] ?? 0);
 
-// Handle follow-up message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['followup'])) {
     $msg = trim($_POST['message'] ?? '');
     if ($msg) {
         $stmt = $conn->prepare("INSERT INTO followups (TicketID,SenderID,Message) VALUES (?,?,?)");
         $stmt->bind_param('iis', $id, $uid, $msg);
         $stmt->execute();
+        setFlash('success', 'Message Sent', 'Your follow-up has been sent.');
     }
     header("Location: ticket_view.php?id=$id"); exit();
 }
@@ -36,6 +36,7 @@ $history   = $conn->query("SELECT h.*,u.FullName FROM history_log h JOIN users u
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/modal.css">
 </head><body>
 <div class="app-layout">
 <?php include '../includes/sidebar_student.php'; ?>
@@ -49,10 +50,7 @@ $history   = $conn->query("SELECT h.*,u.FullName FROM history_log h JOIN users u
   </div>
   <div class="page-body">
     <div style="display:grid;grid-template-columns:2fr 1fr;gap:var(--space-5);align-items:start;">
-
-      <!-- Left Column -->
       <div>
-        <!-- Ticket Details -->
         <div class="card">
           <div class="card-header"><span class="card-title">📋 Ticket Details</span></div>
           <div class="card-body">
@@ -83,7 +81,6 @@ $history   = $conn->query("SELECT h.*,u.FullName FROM history_log h JOIN users u
           </div>
         </div>
 
-        <!-- Messages -->
         <div class="card">
           <div class="card-header"><span class="card-title">💬 Messages</span></div>
           <div class="card-body">
@@ -99,10 +96,14 @@ $history   = $conn->query("SELECT h.*,u.FullName FROM history_log h JOIN users u
               <?php endwhile; ?>
             </div>
             <?php if ($t['Status'] !== 'Closed'): ?>
-            <form method="POST" style="margin-top:var(--space-4);display:flex;gap:var(--space-2);">
+            <div style="margin-top:var(--space-4);display:flex;gap:var(--space-2);">
+              <input type="text" id="followupMsg" placeholder="Send a follow-up message..."
+                style="flex:1;padding:var(--space-2) var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);">
+              <button type="button" id="sendFollowupBtn" class="btn btn-primary btn-sm">Send</button>
+            </div>
+            <form id="followupForm" method="POST" style="display:none;">
               <input type="hidden" name="followup" value="1">
-              <input type="text" name="message" placeholder="Send a follow-up message..." style="flex:1;padding:var(--space-2) var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);" required>
-              <button type="submit" class="btn btn-primary btn-sm">Send</button>
+              <input type="hidden" name="message" id="hiddenMsg">
             </form>
             <?php else: ?>
             <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:var(--space-3);">🔒 This ticket is closed. No further messages can be sent.</p>
@@ -111,7 +112,6 @@ $history   = $conn->query("SELECT h.*,u.FullName FROM history_log h JOIN users u
         </div>
       </div>
 
-      <!-- Right Column: History -->
       <div>
         <div class="card">
           <div class="card-header"><span class="card-title">📜 Ticket History</span></div>
@@ -136,8 +136,42 @@ $history   = $conn->query("SELECT h.*,u.FullName FROM history_log h JOIN users u
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div></div>
+
+<script src="../assets/modal.js"></script>
+<script>
+const sendBtn = document.getElementById('sendFollowupBtn');
+if (sendBtn) {
+    sendBtn.addEventListener('click', async () => {
+        const msg = document.getElementById('followupMsg').value.trim();
+        if (!msg) {
+            await Modal.alert({ type: 'error', title: 'Empty Message', message: 'Please type a message before sending.' });
+            return;
+        }
+        const confirmed = await Modal.confirm({
+            title: 'Send Follow-up',
+            message: `Send this message?<br><br><em style="background:var(--color-bg);padding:8px;border-radius:6px;display:block;">"${msg}"</em>`,
+            confirmText: 'Send'
+        });
+        if (confirmed) {
+            document.getElementById('hiddenMsg').value = msg;
+            Modal.loading(sendBtn, 'Sending...');
+            document.getElementById('followupForm').submit();
+        }
+    });
+}
+</script>
+<?php if (isset($_SESSION['flash'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    Modal.alert({
+        type: '<?= htmlspecialchars($_SESSION['flash']['type']) ?>',
+        title: '<?= htmlspecialchars($_SESSION['flash']['title']) ?>',
+        message: '<?= htmlspecialchars($_SESSION['flash']['message']) ?>'
+    });
+});
+</script>
+<?php unset($_SESSION['flash']); endif; ?>
 </body></html>

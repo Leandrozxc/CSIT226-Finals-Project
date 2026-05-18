@@ -13,21 +13,21 @@
   <nav class="sidebar-nav">
     <div class="sidebar-section">Main</div>
     <a href="dashboard.php" class="<?= $cur==='dashboard.php'?'active':'' ?>">
-      <span class="nav-icon">📊</span> Dashboard
+      Dashboard
     </a>
     <a href="tickets.php" class="<?= $cur==='tickets.php'?'active':'' ?>">
-      <span class="nav-icon">🎫</span> All Tickets
+      All Tickets
     </a>
     <div class="sidebar-section">Management</div>
     <a href="users.php" class="<?= $cur==='users.php'?'active':'' ?>">
-      <span class="nav-icon">👥</span> Users
+      Users
     </a>
     <a href="departments.php" class="<?= $cur==='departments.php'?'active':'' ?>">
-      <span class="nav-icon">🏢</span> Departments
+      Departments
     </a>
     <div class="sidebar-section">Reports</div>
     <a href="reports.php" class="<?= $cur==='reports.php'?'active':'' ?>">
-      <span class="nav-icon">📈</span> Reports
+      Reports
     </a>
   </nav>
   <div class="sidebar-footer">

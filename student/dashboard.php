@@ -15,6 +15,7 @@ $recent   = $conn->query("SELECT t.*,d.DeptName FROM tickets t JOIN departments 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/modal.css">
 </head><body>
 <div class="app-layout">
 <?php include '../includes/sidebar_student.php'; ?>
@@ -57,4 +58,16 @@ $recent   = $conn->query("SELECT t.*,d.DeptName FROM tickets t JOIN departments 
     </div>
   </div>
 </div></div>
+<script src="../assets/modal.js"></script>
+<?php if (isset($_SESSION['flash'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        Modal.alert({
+            type: '<?= htmlspecialchars($_SESSION['flash']['type']) ?>',
+            title: '<?= htmlspecialchars($_SESSION['flash']['title']) ?>',
+            message: '<?= htmlspecialchars($_SESSION['flash']['message']) ?>'
+        });
+    });
+    </script>
+    <?php unset($_SESSION['flash']); endif; ?>
 </body></html>

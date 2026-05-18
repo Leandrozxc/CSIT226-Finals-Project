@@ -52,6 +52,7 @@ while ($m = $monthly->fetch_assoc()) $monthly_data[] = $m;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/modal.css">  
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head><body>
 <div class="app-layout">
@@ -215,4 +216,16 @@ new Chart(document.getElementById('categoryChart'), {
   options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
 });
 </script>
+<script src="../assets/modal.js"></script>
+<?php if (isset($_SESSION['flash'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        Modal.alert({
+            type: '<?= htmlspecialchars($_SESSION['flash']['type']) ?>',
+            title: '<?= htmlspecialchars($_SESSION['flash']['title']) ?>',
+            message: '<?= htmlspecialchars($_SESSION['flash']['message']) ?>'
+        });
+    });
+    </script>
+    <?php unset($_SESSION['flash']); endif; ?>
 </body></html>

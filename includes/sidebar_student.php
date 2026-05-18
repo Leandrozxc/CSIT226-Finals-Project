@@ -13,16 +13,16 @@
   <nav class="sidebar-nav">
     <div class="sidebar-section">My Tickets</div>
     <a href="dashboard.php" class="<?= $cur==='dashboard.php'?'active':'' ?>">
-      <span class="nav-icon">🏠</span> Dashboard
+      Dashboard
     </a>
     <a href="new_ticket.php" class="<?= $cur==='new_ticket.php'?'active':'' ?>">
-      <span class="nav-icon">➕</span> Submit New Request
+      Submit New Request
     </a>
     <a href="my_tickets.php" class="<?= $cur==='my_tickets.php'?'active':'' ?>">
-      <span class="nav-icon">🎫</span> My Tickets
+      My Tickets
     </a>
     <a href="ticket_history.php" class="<?= $cur==='ticket_history.php'?'active':'' ?>">
-      <span class="nav-icon">📋</span> Ticket History Log
+      Ticket History Log
     </a>
   </nav>
   <div class="sidebar-footer">

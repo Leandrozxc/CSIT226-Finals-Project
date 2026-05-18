@@ -1,0 +1,153 @@
+/* ============================================================
+   HELPDESK MODAL SYSTEM - modal.css
+   Place in: assets/modal.css
+   ============================================================ */
+
+/* Overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Box */
+.modal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem 2.25rem;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.25s ease;
+    position: relative;
+}
+.modal-overlay.active .modal-box {
+    transform: translateY(0) scale(1);
+}
+
+/* Icon */
+.modal-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+}
+.modal-icon.confirm  { background: #FEF3C7; color: #D97706; }
+.modal-icon.success  { background: #D1FAE5; color: #059669; }
+.modal-icon.error    { background: #FEE2E2; color: #DC2626; }
+.modal-icon.delete   { background: #FEE2E2; color: #DC2626; }
+.modal-icon.info     { background: #DBEAFE; color: #2563EB; }
+
+/* Text */
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+.modal-message {
+    font-size: 0.9rem;
+    color: #6B7280;
+    text-align: center;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+}
+.modal-record-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Delete confirmation input */
+.modal-confirm-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+.modal-confirm-input:focus { border-color: #7B1D1D; }
+.modal-confirm-input.input-error { border-color: #DC2626; }
+
+/* Actions */
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+.modal-btn {
+    padding: 0.55rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+}
+.modal-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.modal-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.modal-btn.cancel   { background: #F3F4F6; color: #374151; }
+.modal-btn.confirm  { background: #7B1D1D; color: #fff; }
+.modal-btn.danger   { background: #DC2626; color: #fff; }
+.modal-btn.success  { background: #059669; color: #fff; }
+.modal-btn.ok       { background: #7B1D1D; color: #fff; min-width: 80px; margin: 0 auto; display: block; }
+
+/* Review table inside modal */
+.modal-review-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+}
+.modal-review-table tr td:first-child {
+    color: #6B7280;
+    width: 38%;
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    vertical-align: top;
+}
+.modal-review-table tr td:last-child {
+    color: #111827;
+    font-weight: 500;
+    padding: 0.35rem 0;
+}
+
+/* Loading spinner inside button */
+.btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 520px) {
+    .modal-box { padding: 1.5rem 1.25rem; margin: 0 1rem; }
+    .modal-actions { flex-direction: column-reverse; }
+    .modal-btn { width: 100%; text-align: center; }
+}
